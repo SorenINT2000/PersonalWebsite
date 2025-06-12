@@ -1,0 +1,235 @@
+.animated-border-box,
+.animated-border-box-glow {
+  position: absolute;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.animated-border-box-glow {
+  overflow: hidden;
+  /* Glow Blur */
+  filter: blur(20px);
+}
+
+.animated-border-box:before,
+.animated-border-box-glow:before {
+  content: "";
+  z-index: -2;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  width: 99999px;
+  height: 99999px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  transform: translate(-50%, -50%) rotate(0deg);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* .animated-border-box:before,
+.animated-border-box-glow:before { */
+.animated-border-box:hover:before,
+.animated-border-box-glow:hover:before {
+  opacity: 1;
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: translate(-50%, -50%) rotate(1turn);
+  }
+}
+
+.animated-border-box:after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  /* border width */
+  /* double the px from the border width left */
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  /*box border radius*/
+  border-radius: 2px;
+}
+
+.section-list-item {
+  align-items: stretch !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+
+  > .MuiListItemAvatar-root {
+    flex-flow: column !important;
+
+    > .MuiAvatar-root {
+      flex-grow: 1;
+    }
+  }
+
+  > .MuiBox-root {
+    display: flex !important;
+    flex-direction: column !important;
+
+    > .MuiBox-root {
+      display: flex !important;
+      column-gap: 10px;
+
+      > .MuiBox-root {
+        flex-direction: column !important;
+      }
+    }
+  }
+}
+
+.resume-link {
+  min-height: 40px;
+  > .MuiBox-root {
+    border-radius: 4px;
+  }
+}
+
+.job-section {
+  > .MuiBox-root {
+    display: flex;
+    justify-content: space-between;
+    > .MuiBox-root {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 5px;
+    }
+  }
+
+  > .MuiList-root {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+.project-section {
+  > .MuiBox-root {
+    display: flex;
+    justify-content: left;
+  }
+}
+
+@media print {
+  /* Add print-specific scaling */
+  html {
+    -webkit-text-size-adjust: 85% !important;
+    -moz-text-size-adjust: 85% !important;
+    -ms-text-size-adjust: 85% !important;
+    text-size-adjust: 85% !important;
+  }
+
+  .navbar-container {
+    display: none;
+  }
+
+  /* Base print styles */
+  body {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  /* Scope print styles to resume content */
+  .content-grid {
+    font-size: 1rem;
+  }
+
+  .MuiTypography-h6 {
+    font-size: 1.2rem;
+  }
+
+  .MuiTypography-body1,
+  .MuiTypography-body2 {
+    font-size: 0.9rem;
+  }
+
+  .job-section {
+    > .MuiBox-root {
+      flex-direction: row;
+    }
+  }
+
+  .project-section {
+    > .MuiBox-root {
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+  }
+
+  .MuiDivider-root {
+    height: 2pt;
+    border-color: rgb(0, 71, 106) !important;
+  }
+
+  .profile-grid {
+    display: none;
+  }
+
+  .content-grid {
+    width: 100% !important;
+    min-width: 100% !important;
+    flex-basis: 100% !important;
+  }
+
+  .MuiListItemAvatar-root:has(.MuiAvatar-rounded) {
+    display: flex !important;
+    min-width: 30pt !important;
+  }
+
+  .section-list-item {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 2pt !important;
+
+    > .MuiBox-root > .MuiBox-root {
+      flex-direction: row !important;
+    }
+  }
+
+  /* Print color adjustments */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Force white background for the entire page */
+  @page {
+    background-color: white;
+    margin-top: 0.25in;
+    margin-right: 0.5in;
+    margin-bottom: 0.25in;
+    margin-left: 0.5in;
+    size: letter;
+  }
+
+  html,
+  body {
+    background-color: white !important;
+  }
+
+  /* Make all Typography elements blueish by default */
+  .MuiTypography-root {
+    color: rgb(0, 71, 106) !important;
+  }
+
+  /* Make text.secondary elements grey */
+  .MuiTypography-root.MuiTypography-body1,
+  .MuiTypography-root.MuiTypography-body2,
+  .MuiLink-root {
+    color: #666666 !important;
+  }
+
+  /* Style avatars for printing */
+  .MuiAvatar-root {
+    background-color: white !important;
+  }
+
+  .MuiAvatar-root .MuiSvgIcon-root {
+    color: rgb(0, 71, 106) !important;
+  }
+}

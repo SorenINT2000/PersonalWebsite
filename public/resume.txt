@@ -1,0 +1,98 @@
+SOREN SCHULTZ
+Cleveland Heights, OH
+sjschultz11@gmail.com
+(503) 899-3141
+linkedin.com/in/soren-schultz-3255b4191/
+github.com/SorenINT2000
+sorenschultz.com
+
+PROFESSIONAL SUMMARY
+Innovative, analytical software engineer with graduate-level ML coursework and research—from malware-image CNNs (improving classification accuracy by 6%) to reinforcement-learning agents. This research complements experience shipping sleek, performant and user-friendly web apps (personal website has 99% Lighthouse performance score). Targeting full-stack roles that combine rigorous ML with user-centric software.
+
+EDUCATION
+Case Western Reserve University
+Computer Science B.S. '24, M.S. '25
+Minors in Music & Mathematics
+GPA: 3.8/4.0
+September 2020 - May 2025
+
+Relevant Coursework:
+- Machine Learning
+- Deep Generative Models
+- AI for Sequential Decision-Making
+- Probabilistic Graphical Models
+- Natural Language Processing
+- Computer Vision
+- Causality & ML
+- Security for ML
+- Algorithms
+- Data Structures
+- Operating Systems
+- Computer Architecture
+- Compiler Design
+- Database Systems
+- Software Engineering
+- Full-Stack Web Dev
+- Programming in Java
+- Software Craftsmanship
+- Digital Image Processing
+- Programming in C/C++
+- ML on Graphs
+- Graph Theory
+- Probability
+- Linear Alg & Numerical Analysis
+
+EXPERIENCE
+Junior Developer
+Magic Sheet Music Incorporated / Musa
+July 2022 - May 2025
+- Juggled many competing priorities in this two-engineer startup, managing Git workflows, writing technical docs, and presenting findings that guided architecture decisions.
+- Implemented the first browser MVP (React + OpenSheetMusicDisplay), which converts MusicXML to SVG and colors notes green/red as user plays, delivering real-time visual feedback in response to MIDI input.
+- Ported & documented adaptive note-alignment algorithm (invented by Kenrick Licorish, CEO) to JS. Wrote LaTeX spec & pseudocode for future devs.
+- Ran spike tests for low-latency audio streaming: built Python + Node POC (WebSocket signaling manages a WebRTC channel between the client and the server), showing drops from ~500 ms to sub-150 ms round-trip latency, shaping team's tech roadmap.
+- Explored cross-platform clients: produced React Native, Flutter, and Unity prototypes. Documented SVG-rendering limitations that led the team to adopt Unity C# for the production mobile app.
+
+Undergraduate Teaching Assistant
+CWRU - Compiler Design
+Fall 2022 & 2023
+- Co-authored a new LLVM tutorial series (slides + code + write-ups) that replaces the steep llvm.org guide, letting first-time compiler students build and extend a mini-compiler with minimal prior background.
+- Wrote detailed design documents and sample solutions for six lab assignments, covering lexical analysis with Flex, parsing with Bison, and LLVM IR generation & optimization passes.
+- Delivered 3 guest lectures: "Intro to Programming in C++," "Object-Oriented Programming in C++," and "Introduction to Flex."
+- Hosted weekly Zoom office hours and Slack Q&A, mentoring ≈30 students per term on debugging clang errors, interpreting IR, and structuring compiler pipelines.
+- Collaborated with two fellow TAs & Department Chair to align grading rubrics and maintain consistent feedback across project milestones.
+
+SKILLS
+Programming Languages:
+JavaScript, TypeScript, Python, HTML/CSS, Java, MATLAB, C#, C/C++, GDScript, Markdown/LaTeX
+
+Frameworks & Tools:
+React, Node.js, Git, Unity, Godot, Material UI, Pytorch, Firebase, Numpy, OpenCV, Matplotlib, Chakra UI, Mantine UI, WebRTC, WebSockets, Vite, Neo4j, JUnit, Flex/Bison, LLVM
+
+Soft Skills:
+Problem Solving, Team Collaboration, Accountability, Time Management, Adaptability, Active Listening
+
+PROJECTS
+WebRTC Videochat
+TypeScript, React, Firebase Realtime DB, WebRTC, Metered TURN Server, Chakra UI
+A WebRTC videochat web-app that uses Firebase Realtime Database as a signaling server and the WebRTC protocol to stream video and audio data between clients. Uses Metered TURN server to relay traffic between clients and Firebase Security Rules to secure the database.
+
+Oregon ACP Website
+TypeScript, React, Firebase Auth, Firestore DB, Storage & Functions, Mantine UI
+A website for the Oregon American College of Physicians (ACP). Intended to be an improved version of the current oregonacp.org website. Complete with an auth-protected admin dashboard where committee chairs can make announcements and executive members can manage permissions. Uses server-side pagination to load announcements and Firebase Functions to securely manage user claims.
+
+Variational Quantum Circuit for K-arm Bandit Solution Opt
+Python, Numpy, Matplotlib, Qiskit
+Uses a simulated VQC to optimize a solution to K-arm bandit problems. Shown to provide a general improvement in accuracy of the final solution over a classical epsilon-greedy approach for large K.
+
+Malware Image Classification with ESRGAN
+Python, Numpy, SkLearn, Pytorch
+Combines a baseline CNN with a pre-trained ESRGAN model to improve the accuracy of classification of malware images by ~6%. Uses the MalIMG dataset to train the CNN and connective network, keeping the ESRGAN model frozen.
+
+LLM Knowledge Graph Extraction & Bias Detection
+Python, Neo4j, LLMs, Ollama
+Uses an LLM to extract knowledge graphs from reddit posts to build bipartite knowledge graphs between groups of people and trait nodes. Uses an Ollama sentence transformer to detect social biases in the text between two parametrized groups by analyzing the knowledge graph.
+
+DIPLOMAS AND CERTIFICATIONS
+- Bachelor of Science in Computer Science
+- Master of Science in Computer Science
+- Amazon Web Services - Cloud Practitioner
