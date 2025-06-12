@@ -5,7 +5,7 @@ import ArtworkTile from '../components/ArtworkTile';
 import {
   Box,
   Grid,
-  Modal
+  Dialog
 } from '@mui/material';
 
 const imageList: string[] = [
@@ -59,7 +59,7 @@ const thumbnailList: string[] = [
 ]
 
 function Artwork() {
-  const [modal, setModal] = useState<string | null>(null)
+  const [dialog, setDialog] = useState<string | null>(null)
 
   return (
     <Box
@@ -67,8 +67,7 @@ function Artwork() {
       display='flex'
       flexDirection='column'
       alignItems='center'
-      width='100%'
-    >
+      width='100%'>
       <Grid container spacing={0}>
         {
           thumbnailList.map((image, index) =>
@@ -76,15 +75,14 @@ function Artwork() {
               <ArtworkTile
                 name={image}
                 src={image}
-                onClick={() => setModal(imageList[index])}
-              />
+                onClick={() => setDialog(imageList[index])} />
             </Grid>
           )
         }
       </Grid>
-      <Modal
-        open={modal !== null}
-        onClose={() => setModal(null)}
+      <Dialog
+        open={dialog !== null}
+        onClose={() => setDialog(null)}
         sx={{
           display: 'flex',
           position: 'fixed',
@@ -97,14 +95,13 @@ function Artwork() {
           height: '100%',
           p: '40px',
           lineHeight: 0.6,
-        }}
-      >
+        }}>
         <img
-          src={modal ?? ''}
-          alt={modal ?? ''}
+          src={dialog ?? ''}
+          alt={dialog ?? ''}
           style={{ maxHeight: "100%", maxWidth: "100%" }}
         />
-      </Modal>
+      </Dialog>
     </Box>
   );
 }

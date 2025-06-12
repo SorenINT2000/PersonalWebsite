@@ -1,22 +1,12 @@
 import { useState, useContext } from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Menu from '@mui/icons-material/Menu';
-import Brightness4 from '@mui/icons-material/Brightness4';
-import Brightness7 from '@mui/icons-material/Brightness7';
-import GitHub from '@mui/icons-material/GitHub';
-import Home from '@mui/icons-material/Home';
-import FolderSpecial from '@mui/icons-material/FolderSpecial';
-import PhotoLibrary from '@mui/icons-material/PhotoLibrary';
-import ContactPage from '@mui/icons-material/ContactPage';
+import {
+  AppBar, Box, Divider, Drawer, IconButton, List, ListItem,
+  Toolbar, Typography, Button
+} from '@mui/material';
+import {
+  Menu, Brightness4, Brightness7, GitHub, Home,
+  FolderSpecial, PhotoLibrary, ContactPage
+} from '@mui/icons-material';
 import { useNavigate, useLocation } from "react-router-dom";
 import { ThemeContext } from '../context/ThemeContext';
 

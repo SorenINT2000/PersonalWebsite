@@ -7,12 +7,12 @@ import {
 import '../styles/artworkTile.css';
 import type { Artwork } from '../vite-env';
 
-/*@__NO_SIDE_EFFECTS__*/
 function ArtworkTile({ name, src, onClick }: Artwork) {
   const [loaded, setLoaded] = useState(false);
 
   return (
     <Button
+      className="artwork-tile"
       onClick={onClick}
       sx={{
         position: 'relative',
@@ -26,6 +26,7 @@ function ArtworkTile({ name, src, onClick }: Artwork) {
     >
       {!loaded &&
         <Skeleton
+          data-testid="skeleton"
           variant='rectangular'
           sx={{
             width: '100%',

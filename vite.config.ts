@@ -29,5 +29,10 @@ export default defineConfig({
         compact: true,
       }
     },
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/tests/setup.ts'],
   }
 })
