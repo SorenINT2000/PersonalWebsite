@@ -71,7 +71,13 @@ function Artwork() {
       <Grid container spacing={0}>
         {
           thumbnailList.map((image, index) =>
-            <Grid key={image} size={{ xs: 6, sm: 4, md: 3, lg: 2 }}>
+            <Grid
+              key={image}
+              size={{ xs: 6, sm: 4, md: 3, lg: 2 }}
+              sx={{
+                aspectRatio: '1/1',
+              }}
+            >
               <ArtworkTile
                 name={image}
                 src={image}

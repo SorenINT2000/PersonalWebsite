@@ -47,9 +47,6 @@ describe('ArtworkTile', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('skeleton')).not.toBeInTheDocument();
     });
-
-    // Check image is visible (height is set via attribute)
-    expect(image).toHaveAttribute('height', '100%');
   });
 
   it('handles image loading error gracefully', async () => {

@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-function sum(a, b) {
+function sum(a: number, b: number): number {
   return a + b
 }
 
