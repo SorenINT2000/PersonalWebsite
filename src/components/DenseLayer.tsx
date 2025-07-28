@@ -1,33 +1,31 @@
 import React, { useEffect, useRef } from 'react';
 import * as tf from '@tensorflow/tfjs';
-import { Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 
 interface DenseLayerProps {
-  layerName: string;
   activations: tf.Tensor | null;
-  orientation?: 'horizontal' | 'vertical';
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
 }
 
-const DenseLayer: React.FC<DenseLayerProps> = ({ layerName, activations, orientation = 'horizontal', width, height }) => {
+const SCALE = 10;
+
+const DenseLayer: React.FC<DenseLayerProps> = ({ activations, width, height }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (activations && canvasRef.current) {
+    if (!canvasRef.current) return;
+    if (activations) {
       const canvas = canvasRef.current;
       const numNeurons = activations.shape[activations.shape.length - 1];
-      const scale = 10;
-
-      const isHorizontal = orientation === 'horizontal';
 
       const layerDims = [
-        width ?? (isHorizontal ? numNeurons : 1),
-        height ?? (isHorizontal ? 1 : numNeurons),
+        width ?? numNeurons,
+        height ?? 1,
       ];
 
-      canvas.width = layerDims[0] * scale;
-      canvas.height = layerDims[1] * scale;
+      canvas.width = layerDims[0] * SCALE;
+      canvas.height = layerDims[1] * SCALE;
 
       tf.tidy(() => {
         const reshaped = activations.reshape([layerDims[1], layerDims[0]]);
@@ -47,17 +45,19 @@ const DenseLayer: React.FC<DenseLayerProps> = ({ layerName, activations, orienta
         );
         void tf.browser.draw(resized, canvas);
       });
-    } else if (canvasRef.current) {
-      const canvas = canvasRef.current;
-      const context = canvas.getContext('2d');
-      context?.clearRect(0, 0, canvas.width, canvas.height);
+    } else {
+      const ctx = canvasRef.current.getContext('2d');
+      if (!ctx) return;
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     }
-  }, [activations, orientation, width, height]);
+  }, [activations, width, height]);
 
   return (
-    <Grid container direction="column" alignItems="center" spacing={1} sx={{ m: 2 }}>
-      <Typography variant="h6">{layerName}</Typography>
+    <Grid container direction="column" alignItems="center" spacing={1} sx={{ m: 1 }}>
       <canvas
+        width={width ? width * SCALE : 10}
+        height={height ? height * SCALE : 10}
         ref={canvasRef}
         style={{
           border: '1px solid grey',

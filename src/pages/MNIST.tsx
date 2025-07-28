@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import DrawingCanvas, { type DrawingCanvasRef } from '../components/DrawingCanvas';
-import { Grid, Button, Typography, Backdrop, CircularProgress } from '@mui/material';
+import { Grid, Button, Typography, Backdrop, CircularProgress, Divider } from '@mui/material';
 import Conv2DLayer from '../components/Conv2DLayer';
 import DenseLayer from '../components/DenseLayer';
 import Konva from 'konva';
@@ -95,7 +95,7 @@ const MNIST: React.FC = () => {
   };
 
   return (
-    <Grid container direction="column" alignItems="center" spacing={2}>
+    <Grid container direction="column" alignItems="center">
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isModelLoading}
@@ -118,11 +118,15 @@ const MNIST: React.FC = () => {
           </Grid>
         )}
       </Grid>
-      <Conv2DLayer layerName="Conv1" featureMaps={12} activations={conv1Activations} wrapLimit={6} />
-      <Conv2DLayer layerName="Conv2" featureMaps={24} activations={conv2Activations} wrapLimit={6} />
-      <Conv2DLayer layerName="Conv3" featureMaps={32} activations={conv3Activations} wrapLimit={8} />
-      <DenseLayer layerName="Dense1" activations={dense1Activations} width={20} height={10} />
-      <DenseLayer layerName="Output" activations={outputActivations} orientation="horizontal" />
+      <Conv2DLayer featureMaps={12} activations={conv1Activations} wrapLimit={6} />
+      <Divider style={{ width: '30%' }} />
+      <Conv2DLayer featureMaps={24} activations={conv2Activations} wrapLimit={6} />
+      <Divider style={{ width: '30%' }} />
+      <Conv2DLayer featureMaps={32} activations={conv3Activations} wrapLimit={8} />
+      <Divider style={{ width: '30%' }} />
+      <DenseLayer activations={dense1Activations} width={20} height={10} />
+      <Divider style={{ width: '30%' }} />
+      <DenseLayer activations={outputActivations} width={10} height={1} />
     </Grid>
   );
 };
