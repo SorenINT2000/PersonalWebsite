@@ -5,17 +5,18 @@ import {
 } from '@mui/material';
 import {
   Menu, Brightness4, Brightness7, GitHub, Home,
-  FolderSpecial, PhotoLibrary, ContactPage
+  FolderSpecial, PhotoLibrary, ContactPage, Draw
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from "react-router-dom";
 import { ThemeContext } from '../context/ThemeContext';
 
-const navItems = ['resume', 'projects', 'artwork', 'contact'];
+const navItems = ['resume', 'projects', 'artwork', 'contact', 'mnist'];
 const pathIcons = {
   '/resume': <Home sx={{ height: '100%' }} />,
   '/projects': <FolderSpecial sx={{ height: '100%' }} />,
   '/artwork': <PhotoLibrary sx={{ height: '100%' }} />,
   '/contact': <ContactPage sx={{ height: '100%' }} />,
+  '/mnist': <Draw sx={{ height: '100%' }} />,
 }
 
 function NavBar() {
