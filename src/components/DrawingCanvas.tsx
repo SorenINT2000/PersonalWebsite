@@ -1,7 +1,8 @@
-import React, { useRef, useImperativeHandle, forwardRef, useEffect } from 'react';
+import React, { useRef, useImperativeHandle, forwardRef, useEffect, useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import '@tensorflow/tfjs-backend-cpu';
 import Konva from 'konva';
+import { useTheme } from '@mui/material/styles';
 
 export interface DrawingCanvasRef {
   clear: () => void;
@@ -10,10 +11,9 @@ export interface DrawingCanvasRef {
 
 interface DrawingCanvasProps {
   onDraw: (stage: Konva.Stage) => void;
-  onDrawEnd: (stage: Konva.Stage) => void;
 }
 
-const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onDraw, onDrawEnd }, ref) => {
+const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onDraw }, ref) => {
   const isDrawing = useRef(false);
 
   // Off-screen Konva stage for high-resolution drawing
@@ -23,6 +23,9 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onDraw
 
   // On-screen canvas for pixelated preview
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
+  const tabRef = useRef<HTMLDivElement>(null);
+  const theme = useTheme();
+  const [isTabVisible, setIsTabVisible] = useState(false);
 
   // Initialize the off-screen stage
   useEffect(() => {
@@ -43,6 +46,11 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onDraw
     layer.add(background);
     stageRef.current.add(layer);
     updatePreview();
+    const timer = setTimeout(() => {
+      setIsTabVisible(true);
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const updatePreview = () => {
@@ -90,6 +98,9 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onDraw
   };
 
   const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+    if (isTabVisible) {
+      setIsTabVisible(false);
+    }
     e.preventDefault();
     isDrawing.current = true;
     const pos = getPointerPosition(e);
@@ -125,7 +136,6 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onDraw
 
     requestAnimationFrame(updatePreview);
     onDraw(stageRef.current);
-    onDrawEnd(stageRef.current);
   };
 
   const handleMouseUp = () => {
@@ -133,18 +143,25 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onDraw
 
     isDrawing.current = false;
     currentLineRef.current = null;
-    if (stageRef.current) {
-      onDrawEnd(stageRef.current);
-    }
+    if (!stageRef.current) return;
+
+    onDraw(stageRef.current);
   };
 
   return (
-    <>
+    <div style={{ position: 'relative', display: 'inline-block' }}>
       <canvas
         ref={previewCanvasRef}
         width={280}
         height={280}
-        style={{ border: '1px solid grey', imageRendering: 'pixelated', touchAction: 'none' }}
+        style={{
+          border: '1px solid grey',
+          imageRendering: 'pixelated',
+          touchAction: 'none',
+          verticalAlign: 'bottom',
+          position: 'relative',
+          zIndex: 1,
+        }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -153,8 +170,29 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onDraw
         onTouchMove={handleMouseMove}
         onTouchEnd={handleMouseUp}
       />
+      <div
+        ref={tabRef}
+        style={{
+          position: 'absolute',
+          left: '0',
+          top: '20px',
+          backgroundColor: theme.palette.secondary.main,
+          color: theme.palette.getContrastText(theme.palette.secondary.main),
+          padding: '5px',
+          borderTopRightRadius: '5px',
+          borderBottomRightRadius: '5px',
+          writingMode: 'vertical-rl',
+          transform: `${isTabVisible ? 'translateX(-100%)' : 'translateX(0)'} rotate(180deg)`,
+          pointerEvents: 'none',
+          fontSize: '16px',
+          transition: 'transform 800ms ease-out',
+          zIndex: 0,
+        }}
+      >
+        draw a digit here
+      </div>
       <div ref={containerRef} style={{ display: 'none' }} />
-    </>
+    </div>
   );
 });
 

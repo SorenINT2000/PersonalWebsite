@@ -1,23 +1,30 @@
 import React, { useState, useRef, useEffect } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import DrawingCanvas, { type DrawingCanvasRef } from '../components/DrawingCanvas';
-import { Grid, Button, Typography, Backdrop, CircularProgress, Divider, useMediaQuery, Box } from '@mui/material';
-import Conv2DLayer from '../components/Conv2DLayer';
-import DenseLayer from '../components/DenseLayer';
-import Konva from 'konva';
+import {
+  Button,
+  Typography,
+  Backdrop,
+  CircularProgress,
+  Divider,
+  useMediaQuery,
+  Box,
+} from "@mui/material";
+import Conv2DLayer from "../components/Conv2DLayer";
+import DenseLayer from "../components/DenseLayer";
+import Konva from "konva";
 
-type WorkerMessage = {
-  type: 'modelReady';
-} | {
-  type: 'activations';
-  data: tf.TensorLike[];
-  jobId: number;
-} | {
-  type: 'prediction';
-  data: number;
-  jobId: number;
-};
-
+type WorkerMessage =
+  | { type: "modelReady" }
+  | {
+    type: 'activations';
+    data: tf.TensorLike[];
+    jobId: number;
+  } | {
+    type: 'prediction';
+    data: number;
+    jobId: number;
+  };
 
 const MNIST: React.FC = () => {
   const [prediction, setPrediction] = useState<number | null>(null);
@@ -80,7 +87,7 @@ const MNIST: React.FC = () => {
     setPrediction(null);
   };
 
-  const handleDrawEnd = (stage: Konva.Stage) => {
+  const handleDraw = (stage: Konva.Stage) => {
     if (isModelLoading) return;
 
     const canvas = stage.toCanvas();
@@ -93,7 +100,7 @@ const MNIST: React.FC = () => {
   };
 
   return (
-    <Grid container direction="column" alignItems="center">
+    <>
       {isModelLoading && (
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -103,21 +110,22 @@ const MNIST: React.FC = () => {
           <Typography sx={{ ml: 2 }}>Loading Model...</Typography>
         </Backdrop>
       )}
-      <Grid container spacing={2} justifyContent="center" sx={{ mb: 2 }}>
-        <Grid>
-          <DrawingCanvas ref={canvasRef} onDraw={() => { return; }} onDrawEnd={handleDrawEnd} />
-        </Grid>
-      </Grid>
-      <Grid container spacing={2} justifyContent="center" alignItems="center">
-        <Grid>
+      <Box sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 1,
+        m: 1
+      }}>
+        <DrawingCanvas ref={canvasRef} onDraw={handleDraw} />
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
           <Button variant="contained" onClick={handleClear} disabled={isModelLoading}>Clear</Button>
-        </Grid>
-        {prediction !== null && (
-          <Grid>
-            <Typography variant="h5" sx={{ ml: 2 }}>Prediction: {prediction}</Typography>
-          </Grid>
-        )}
-      </Grid>
+          {prediction !== null && (
+            <Typography variant="h5">Prediction: {prediction}</Typography>
+          )}
+        </Box>
+      </Box>
       <Box sx={{
         width: '100%',
         maxHeight: 'calc(100vh - 500px)', // Adjust this value as needed
@@ -141,7 +149,7 @@ const MNIST: React.FC = () => {
         <Divider style={{ width: '30%' }} />
         <DenseLayer activations={outputActivations} width={10} height={1} />
       </Box>
-    </Grid>
+    </>
   );
 };
 
