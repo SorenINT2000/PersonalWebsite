@@ -3,6 +3,7 @@ import * as tf from '@tensorflow/tfjs';
 import '@tensorflow/tfjs-backend-cpu';
 
 let model: tf.LayersModel;
+let currentJobId: number | undefined;
 
 const loadModelAndWeights = async () => {
   if (!model) {
@@ -16,9 +17,18 @@ const loadModelAndWeights = async () => {
 };
 
 const downsample = (imageData: ImageData) => {
+  // Efficiently downsample by slicing every 10th pixel in both axes using tfjs
   return tf.tidy(() => {
-    const tensor = tf.browser.fromPixels(imageData, 1);
-    const downsampled = tf.avgPool(tensor.as4D(1, 280, 280, 1).toFloat(), [10, 10], [10, 10], 'valid');
+    // [280, 280, 1]
+    const tensor = tf.browser.fromPixels(imageData, 1).toFloat(); // [1, 280, 280, 1]
+    const batched = tensor.expandDims(0);
+    // Use stridedSlice to pick every 10th pixel in height and width
+    const downsampled = batched.stridedSlice(
+      [0, 0, 0, 0],
+      [1, 280, 280, 1],
+      [1, 10, 10, 1]
+    ); // [1, 28, 28, 1]
+    // Normalize to [0, 1]
     return downsampled.div(255);
   });
 };
@@ -26,31 +36,10 @@ const downsample = (imageData: ImageData) => {
 interface WorkerMessage {
   type: 'init' | 'predict';
   data?: ImageData;
-  jobId?: string;
+  jobId?: number;
 }
 
-const isWorkerMessage = (data: unknown): data is WorkerMessage => {
-  if (typeof data !== 'object' || data === null) {
-    return false;
-  }
-
-  const { type } = data as { type: unknown };
-
-  if (type === 'init') {
-    return true;
-  }
-
-  if (type === 'predict') {
-    return 'data' in data && 'jobId' in data;
-  }
-
-  return false;
-}
-
-self.onmessage = async (event: MessageEvent) => {
-  if (!isWorkerMessage(event.data)) {
-    return;
-  }
+self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   const { type, data, jobId } = event.data;
 
   switch (type) {
@@ -59,29 +48,45 @@ self.onmessage = async (event: MessageEvent) => {
       break;
     }
     case 'predict': {
-      if (data && model) {
-        const normalized = downsample(data);
-        const outputs: tf.Tensor[] = [];
-        
-        // Chain the layers, passing the output of one to the next.
-        let x: tf.Tensor = normalized.reshape([1, 784]); // Initial input for the first layer.
-        for (const layer of model.layers) {
-          x = layer.apply(x) as tf.Tensor;
-          outputs.push(x);
+      if (!data || !model) break;
+
+      currentJobId = jobId;
+
+      const normalized = downsample(data);
+      const outputs: tf.Tensor[] = [];
+
+      // Chain the layers, passing the output of one to the next.
+      let x: tf.Tensor = normalized; // The downsample function already returns the correct 4D shape
+      for (const layer of model.layers) {
+        if (jobId !== currentJobId) {
+          // A new job has started, so abort this one.
+          outputs.forEach(t => t.dispose());
+          normalized.dispose();
+          x.dispose();
+          return;
         }
-        
-        const activationPromises = outputs.map(output => output.array());
-        const activations = await Promise.all(activationPromises);
-        
-        self.postMessage({ type: 'activations', data: activations, jobId });
+        x = layer.apply(x) as tf.Tensor;
+        outputs.push(x);
+      }
 
-        const finalPrediction = x.argMax(-1).dataSync()[0];
-        self.postMessage({ type: 'prediction', data: finalPrediction, jobId });
-
+      if (jobId !== currentJobId) {
+        // Job was cancelled during processing
         outputs.forEach(t => t.dispose());
         normalized.dispose();
+        return;
       }
+
+      const activationPromises = outputs.map(output => output.array());
+      const activations = await Promise.all(activationPromises);
+
+      self.postMessage({ type: 'activations', data: activations, jobId });
+
+      const finalPrediction = x.argMax(-1).dataSync()[0];
+      self.postMessage({ type: 'prediction', data: finalPrediction, jobId });
+
+      outputs.forEach(t => t.dispose());
+      normalized.dispose();
       break;
     }
   }
-}; 
+};

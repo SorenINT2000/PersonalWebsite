@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import DrawingCanvas, { type DrawingCanvasRef } from '../components/DrawingCanvas';
-import { Grid, Button, Typography, Backdrop, CircularProgress, Divider } from '@mui/material';
+import { Grid, Button, Typography, Backdrop, CircularProgress, Divider, useMediaQuery, Box } from '@mui/material';
 import Conv2DLayer from '../components/Conv2DLayer';
 import DenseLayer from '../components/DenseLayer';
 import Konva from 'konva';
@@ -26,6 +26,7 @@ const MNIST: React.FC = () => {
   const [conv3Activations, setConv3Activations] = useState<tf.Tensor | null>(null);
   const [dense1Activations, setDense1Activations] = useState<tf.Tensor | null>(null);
   const [outputActivations, setOutputActivations] = useState<tf.Tensor | null>(null);
+
   const [isModelLoading, setIsModelLoading] = useState(true);
   const canvasRef = useRef<DrawingCanvasRef | null>(null);
   const workerRef = useRef<Worker | null>(null);
@@ -45,23 +46,20 @@ const MNIST: React.FC = () => {
         case 'modelReady':
           setIsModelLoading(false);
           break;
-        case 'activations':
-          {
-            const { data } = event.data;
-            if (data && Array.isArray(data)) {
-              // Correct indices based on the actual model.json architecture
-              setConv1Activations(tf.tensor(data[3]));   // 'activation_48'
-              setConv2Activations(tf.tensor(data[6]));   // 'activation_49'
-              setConv3Activations(tf.tensor(data[9]));   // 'activation_50'
-              setDense1Activations(tf.tensor(data[13]));  // 'activation_51'
-              setOutputActivations(tf.tensor(data[15]));  // 'dense_25' (final output)
-            }
+        case 'activations': {
+          const { data } = event.data;
+          if (data && Array.isArray(data)) {
+            // Correct indices based on the actual model.json architecture
+            setConv1Activations(tf.tensor(data[3]));   // 'activation_48'
+            setConv2Activations(tf.tensor(data[6]));   // 'activation_49'
+            setConv3Activations(tf.tensor(data[9]));   // 'activation_50'
+            setDense1Activations(tf.tensor(data[13]));  // 'activation_51'
+            setOutputActivations(tf.tensor(data[15]));  // 'dense_25' (final output)
           }
           break;
+        }
         case 'prediction':
           setPrediction(event.data.data);
-          break;
-        default:
           break;
       }
     }
@@ -73,9 +71,7 @@ const MNIST: React.FC = () => {
 
   const handleClear = () => {
     jobIdRef.current++; // Invalidate current job
-    if (canvasRef.current) {
-      canvasRef.current.clear();
-    }
+    canvasRef.current?.clear();
     setConv1Activations(null);
     setConv2Activations(null);
     setConv3Activations(null);
@@ -85,24 +81,28 @@ const MNIST: React.FC = () => {
   };
 
   const handleDrawEnd = (stage: Konva.Stage) => {
+    if (isModelLoading) return;
+
     const canvas = stage.toCanvas();
     const context = canvas.getContext('2d');
-    if (!context) {
-      return;
-    }
+    if (!context) return;
+
     const imageData = context.getImageData(0, 0, 280, 280);
+
     workerRef.current?.postMessage({ type: 'predict', data: imageData, jobId: jobIdRef.current });
   };
 
   return (
     <Grid container direction="column" alignItems="center">
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isModelLoading}
-      >
-        <CircularProgress color="inherit" />
-        <Typography sx={{ ml: 2 }}>Loading Model...</Typography>
-      </Backdrop>
+      {isModelLoading && (
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={isModelLoading}
+        >
+          <CircularProgress color="inherit" />
+          <Typography sx={{ ml: 2 }}>Loading Model...</Typography>
+        </Backdrop>
+      )}
       <Grid container spacing={2} justifyContent="center" sx={{ mb: 2 }}>
         <Grid>
           <DrawingCanvas ref={canvasRef} onDraw={() => { return; }} onDrawEnd={handleDrawEnd} />
@@ -118,15 +118,29 @@ const MNIST: React.FC = () => {
           </Grid>
         )}
       </Grid>
-      <Conv2DLayer featureMaps={12} activations={conv1Activations} wrapLimit={6} />
-      <Divider style={{ width: '30%' }} />
-      <Conv2DLayer featureMaps={24} activations={conv2Activations} wrapLimit={6} />
-      <Divider style={{ width: '30%' }} />
-      <Conv2DLayer featureMaps={32} activations={conv3Activations} wrapLimit={8} />
-      <Divider style={{ width: '30%' }} />
-      <DenseLayer activations={dense1Activations} width={20} height={10} />
-      <Divider style={{ width: '30%' }} />
-      <DenseLayer activations={outputActivations} width={10} height={1} />
+      <Box sx={{
+        width: '100%',
+        maxHeight: 'calc(100vh - 500px)', // Adjust this value as needed
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}>
+        <Conv2DLayer featureMaps={12} activations={conv1Activations} wrapLimit={6} />
+        <Divider style={{ width: '30%' }} />
+        <Conv2DLayer featureMaps={24} activations={conv2Activations} wrapLimit={6} />
+        <Divider style={{ width: '30%' }} />
+        <Conv2DLayer
+          featureMaps={32}
+          activations={conv3Activations}
+          wrapLimit={useMediaQuery('(max-width:600px)') ? 6 : 8}
+        />
+        <Divider style={{ width: '30%' }} />
+        <DenseLayer activations={dense1Activations} width={20} height={10} />
+        <Divider style={{ width: '30%' }} />
+        <DenseLayer activations={outputActivations} width={10} height={1} />
+      </Box>
     </Grid>
   );
 };

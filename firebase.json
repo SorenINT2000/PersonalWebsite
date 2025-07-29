@@ -22,7 +22,7 @@
     ],
     "headers": [
       {
-        "source": "**/*.@(js|mp3|css|webp|html|txt|xml|svg)",
+        "source": "**/*.@(js|mp3|css|webp|html|txt|xml|svg|json|bin)",
         "headers": [
           {
             "key": "Cache-Control",

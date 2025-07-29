@@ -125,6 +125,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onDraw
 
     requestAnimationFrame(updatePreview);
     onDraw(stageRef.current);
+    onDrawEnd(stageRef.current);
   };
 
   const handleMouseUp = () => {

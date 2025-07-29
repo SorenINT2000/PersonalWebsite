@@ -27,4 +27,4 @@ dist-ssr
 .firebase
 
 # Environment
-.env*
+.env
