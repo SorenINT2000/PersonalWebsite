@@ -4,11 +4,11 @@ import { preload } from "react-dom";
 import {
     Box, Grid, Typography, Divider, List, ListItem, ListItemAvatar,
     Avatar, Fade, Checkbox, Dialog, DialogTitle, DialogContent,
-    DialogActions, Button, IconButton, Link
+    DialogActions, Button, IconButton, Link, Skeleton
 } from "@mui/material";
 import {
     School, Work, Code, Email, LinkedIn, GitHub, Print,
-    FolderSpecial, Phone, Place, Person, WorkspacePremium
+    FolderSpecial, Phone, Place, Person, WorkspacePremium, Language as LanguageIcon
 } from "@mui/icons-material";
 import { useMediaQuery } from "@mui/material";
 
@@ -578,21 +578,152 @@ const DiplomasAndCertifications = () => {
                     >
                         Bachelor of Science in Computer Science
                     </Link>
-                    {" • "}
+                    <Typography display="inline" color="text.secondary">{" • "}</Typography>
                     <Link
                         color="text.secondary"
                         href={msDip}
                         target="_blank">
                         Master of Science in Computer Science
                     </Link>
-                    {" • "}
+                    <Typography display="inline" color="text.secondary">{" • "}</Typography>
                     <Link
                         color="text.secondary"
                         href="https://www.credly.com/badges/54ee77b6-2d76-4145-9d82-469e1366ba42"
                         target="_blank">
-                        Amazon Web Services - Cloud Practitioner
+                        Amazon Web Services: Cloud Practitioner
                     </Link>
                 </div>
+            </Box>
+        </ListItem >
+    );
+}
+
+const Languages = () => {
+    const [duolingoData, setDuolingoData] = useState<null | DuolingoData>(null);
+
+    type DuolingoCourse = {
+        authorId: string;
+        crowns: number;
+        fromLanguage: string;
+        healthEnabled: boolean;
+        id: string;
+        learningLanguage: string;
+        placementTestAvailable: boolean;
+        preload: boolean;
+        title: string;
+        xp: number;
+    };
+
+    type DuolingoData = {
+        courses: DuolingoCourse[];
+        name: string;
+        username: string;
+        picture: string;
+        streak: number;
+        totalXp: number;
+    };
+
+    const Language = ({ course }: { course: DuolingoCourse }) => {
+        const flags: Record<string, string> = {
+            "es": "https://d35aaqx5ub95lt.cloudfront.net/images/borderlessFlags/40a9ce3dfafe484bced34cdc124a59e4.svg",
+            "fr": "https://d35aaqx5ub95lt.cloudfront.net/images/borderlessFlags/7488bd7cd28b768ec2469847a5bc831e.svg",
+            "de": "https://d35aaqx5ub95lt.cloudfront.net/images/borderlessFlags/097f1c20a4f421aa606367cd33893083.svg",
+            "it": "https://d35aaqx5ub95lt.cloudfront.net/images/borderlessFlags/19bd596d7c7e5962aaa7e88ffde5c254.svg",
+            "pl": "https://d35aaqx5ub95lt.cloudfront.net/images/borderlessFlags/d8e00c4cb890ed197e69474389a12995.svg"
+        }
+        return (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexDirection: 'row !important' }}>
+                <img src={flags[course.learningLanguage]} alt="Language Flag" style={{ width: '31px', height: '24px' }} />
+                <Typography variant="duolingo" color="text.secondary">{course.title}</Typography>
+                <img src="https://d35aaqx5ub95lt.cloudfront.net/images/profile/01ce3a817dd01842581c3d18debcbc46.svg" alt="xp" style={{ height: '24px' }} />
+                <Typography variant="duolingo" color="text.secondary">{course.xp}</Typography>
+            </Box>
+        )
+    }
+
+    useEffect(() => {
+        async function scrapeDuolingo() {
+            const duolingoUserId = import.meta.env.VITE_DUOLINGO_USER_ID as string;
+            const duolingoApiUrl = `https://www.duolingo.com/2017-06-30/users/${duolingoUserId}?fields=courses,name,username,picture,totalXp,streak`
+            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(duolingoApiUrl)}`;
+            try {
+                const response = await fetch(proxyUrl);
+                if (response.ok) {
+                    const data = await response.json() as DuolingoData;
+                    setDuolingoData(data);
+                } else {
+                    console.error("Failed to fetch Duolingo data:", response.status, response.statusText);
+                }
+            } catch (error) {
+                console.error("Error fetching Duolingo data:", error);
+            }
+        }
+
+        scrapeDuolingo();
+    }, []);
+
+    return (
+        <ListItem className="section-list-item">
+            <ListItemAvatar sx={{ display: { xs: 'none', md: 'flex' } }}>
+                <Avatar variant="rounded">
+                    <LanguageIcon />
+                </Avatar>
+            </ListItemAvatar>
+            <Box>
+                <Typography variant="h6">Languages</Typography>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' }
+                }}>
+                    {duolingoData ? (
+                        <Button
+                            style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', gap: "10px", flexDirection: 'row' }}
+                            onClick={() => {
+                                window.open(`https://www.duolingo.com/profile/SorenINT2001`, '_blank');
+                            }}>
+                            <Avatar variant="rounded" src={`https://${duolingoData?.picture}/xxlarge`} />
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexDirection: 'row' }}>
+                                <img
+                                    src={`https://d35aaqx5ub95lt.cloudfront.net/images/streakCalendar/a72349d80ba9da4368853a3446f93530.svg`}
+                                    alt="Duolingo Profile Picture"
+                                    style={{ width: '23.33px', height: '28px' }}
+                                />
+                                <Typography variant="duolingo" color="text.duoStreak">
+                                    {duolingoData?.streak}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', textAlign: 'left', gap: 0, flexDirection: 'column' }}>
+                                <Typography variant="duolingo" color="text.primary" sx={{ fontSize: '18px' }}>
+                                    {duolingoData?.name}
+                                </Typography>
+                                <Typography variant="duolingo" color="text.secondary" sx={{ fontSize: '11px' }}>
+                                    {duolingoData?.username}
+                                </Typography>
+                            </Box>
+                        </Button>
+                    ) : <Skeleton variant="rounded" width={230.7} height={52} />}
+
+                    <Divider
+                        orientation={window.matchMedia('(width <= 900px)').matches ? "horizontal" : "vertical"}
+                        flexItem
+                        component="div"
+                    />
+
+                    <Box sx={{ display: 'flex', mt: { xs: 1, md: 0 }, flex: 1, flexDirection: 'row !important', gap: 1 }}>
+                        {duolingoData
+                            ? duolingoData.courses.map((course, idx, arr) => (
+                                <React.Fragment key={course.id}>
+                                    <Language course={course} />
+                                    {idx < arr.length - 1 && (
+                                        <Divider orientation="vertical" flexItem />
+                                    )}
+                                </React.Fragment>
+                            ))
+                            :
+                            <Skeleton variant="rounded" width={140} height={52} />
+                        }
+                    </Box>
+                </Box>
             </Box>
         </ListItem >
     );
@@ -710,6 +841,10 @@ function Resume() {
                             <Divider variant="fullWidth" component="li" />
                             <Fade in={showContent} timeout={2800}>
                                 {DiplomasAndCertifications()}
+                            </Fade>
+                            <Divider variant="fullWidth" component="li" />
+                            <Fade in={showContent} timeout={3200}>
+                                {Languages()}
                             </Fade>
                         </List>
                     </Grid>

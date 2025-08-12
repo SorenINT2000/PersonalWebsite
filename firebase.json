@@ -1,48 +1,48 @@
 {
-  "hosting": {
-    "public": "dist",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "/resume.txt",
-        "destination": "/resume.txt"
-      },
-      {
-        "source": "/resume.pdf",
-        "destination": "/resume.pdf"
-      },
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ],
-    "headers": [
-      {
-        "source": "**/*.@(js|mp3|css|webp|html|txt|xml|svg|json|bin)",
+    "hosting": {
+        "public": "dist",
+        "ignore": [
+            "firebase.json",
+            "**/.*",
+            "**/node_modules/**"
+        ],
+        "rewrites": [
+            {
+                "source": "/resume.txt",
+                "destination": "/resume.txt"
+            },
+            {
+                "source": "/resume.pdf",
+                "destination": "/resume.pdf"
+            },
+            {
+                "source": "**",
+                "destination": "/index.html"
+            }
+        ],
         "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "max-age=604800"
-          }
+            {
+                "source": "**/*.@(js|mp3|css|webp|html|txt|xml|svg|json|bin)",
+                "headers": [
+                    {
+                        "key": "Cache-Control",
+                        "value": "max-age=604800"
+                    }
+                ]
+            },
+            {
+                "source": "**/*.pdf",
+                "headers": [
+                    {
+                        "key": "Cache-Control",
+                        "value": "max-age=604800"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/pdf"
+                    }
+                ]
+            }
         ]
-      },
-      {
-        "source": "**/*.pdf",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "max-age=604800"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/pdf"
-          }
-        ]
-      }
-    ]
-  }
+    }
 }

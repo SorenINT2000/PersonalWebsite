@@ -13,6 +13,16 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+    font-family: "din-round";
+    src: url("https://db.onlinewebfonts.com/t/f83531ae85a3fcd9345c4267e28833ee.eot");
+    src: url("https://db.onlinewebfonts.com/t/f83531ae85a3fcd9345c4267e28833ee.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/f83531ae85a3fcd9345c4267e28833ee.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/f83531ae85a3fcd9345c4267e28833ee.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/f83531ae85a3fcd9345c4267e28833ee.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/f83531ae85a3fcd9345c4267e28833ee.svg#DIN Next Rounded LT Pro Medium")format("svg");
+}
+
 a {
   font-weight: 500;
   color: #646cff;
