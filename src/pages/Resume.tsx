@@ -645,7 +645,7 @@ const Languages = () => {
         async function scrapeDuolingo() {
             const duolingoUserId = import.meta.env.VITE_DUOLINGO_USER_ID as string;
             const duolingoApiUrl = `https://www.duolingo.com/2017-06-30/users/${duolingoUserId}?fields=courses,name,username,picture,totalXp,streak`
-            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(duolingoApiUrl)}`;
+            const proxyUrl = `https://api.allorigins.win/raw?url=${duolingoApiUrl}`;
             try {
                 const response = await fetch(proxyUrl);
                 if (response.ok) {
