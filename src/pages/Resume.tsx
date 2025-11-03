@@ -158,11 +158,10 @@ const ProfessionalSummary = () => {
             </ListItemAvatar>
             <Box>
                 <Typography sx={{ fontSize: '16px', mb: 0.5 }}>
-                    Innovative, analytical software engineer with graduate-level ML coursework and research—from
-                    malware-image CNNs (improving classification accuracy by 6%) to reinforcement-learning agents.
-                    This research complements experience shipping sleek, performant and user-friendly web apps
-                    (personal website has 99% Lighthouse performance score). Targeting full-stack roles that
-                    combine rigorous ML with user-centric software.
+                    Full-stack software engineer with experience architecting and deploying scalable,
+                    end-to-end solutions. Proven ability to own a company's entire tech stack, from
+                    a Python/FastAPI backend on AWS to multi-threaded data pipelines, internal Electron
+                    tools, and public-facing React applications.
                 </Typography>
             </Box>
         </ListItem>
@@ -398,13 +397,13 @@ const Experience = () => {
             <Box>
                 <Typography variant="h6">Experience</Typography>
                 {
-                    Job("Magic Sheet Music Incorporated / Musa", "Junior Developer", "July 2022 - Current",
+                    Job("Magic Sheet Music Incorporated / Musa", "Software Engineer", "July 2022 - Current",
                         [
-                            "Juggling many competing priorities in this two-engineer startup, managing Git workflows, writing technical docs, and presenting findings that guide architecture decisions.",
-                            "Implemented the first browser MVP (React + OpenSheetMusicDisplay), which converts MusicXML to SVG and colors notes green/red as user plays, delivering real-time visual feedback in response to MIDI input.",
-                            "Ported & documented adaptive note-alignment algorithm (invented by Kenrick Licorish, CEO) to JS. Wrote LaTeX spec & pseudocode for future devs.",
-                            "Ran spike tests for low-latency audio streaming: built Python + Node POC (WebSocket signaling manages a WebRTC channel between the client and the server), showing drops from ~500 ms to sub-150 ms round-trip latency, shaping team's tech roadmap.",
-                            "Explored cross-platform clients: produced React Native, Flutter, and Unity prototypes. Documented SVG-rendering limitations that led the team to adopt Unity C# for the production mobile app.",
+                            "Architect, maintain, and deploy the company's core API using a 3-layer architecture (Python, FastAPI, SQLModel); designed and secured the AWS stack (ECS, RDS, S3, ALB, Cognito), managing secrets with SSM Parameter Store and secure dev access with an SSH bastion host.",
+                            "Engineered a multi-threaded Python batch uploader (with a Textual TUI) to process, convert, and ingest 1.2 million (500GB) sheet music files into the API, featuring concurrent processing, queue management, and job-resume capabilities.",
+                            "Developed a secure, cross-platform internal admin application (Electron, TypeScript, React, MUI) to manage the API database, run web-scraping jobs, and automatically synchronize files with live MuseScore sessions.",
+                            "Lead development of the public-facing marketing website and user portal (React, TypeScript, Vite), featuring role-based dashboards (Learner & Teacher) with distinct permissions, billing, and student management UIs.",
+                            "Implemented comprehensive testing and CI/CD, achieving 75% code coverage with Pytest on the backend API and automating deployments to AWS ECS using GitLab CI.",
                         ])
                 }
                 <Divider />
@@ -448,26 +447,28 @@ const Skills = () => {
                     <Grid size={1}>
                         <Typography color="text.primary">Programming Languages</Typography>
                         <Typography color="text.secondary" sx={{ fontSize: '12px', my: 0 }}>
-                            {['JavaScript', 'TypeScript', 'Python', 'HTML/CSS', 'Java', 'MATLAB',
-                                'C#', 'C/C++', 'GDScript', 'Markdown/LaTeX'].join(" • ")}
+                            {['Python', 'TypeScript', 'JavaScript', 'SQL', 'Java', 'C#', 'HTML/CSS'].join(" • ")}
                         </Typography>
                     </Grid>
                     <Grid size={1}>
                         <Divider />
-                        <Typography color="text.primary">Frameworks & Tools</Typography>
+                        <Typography color="text.primary">Backend, Cloud & Databases</Typography>
                         <Typography color="text.secondary" sx={{ fontSize: '12px', my: 0 }}>
-                            {['React', 'Node.js', 'Git', 'Unity', 'Godot', 'Material UI',
-                                'Pytorch', 'Firebase', 'Numpy', 'OpenCV', 'Matplotlib',
-                                'Chakra UI', 'Mantine UI', 'WebRTC', 'WebSockets', 'Vite',
-                                'Neo4j', 'JUnit', 'Flex/Bison', 'LLVM'].join(" • ")}
+                            {['AWS (ECS, RDS, S3, Cognito, ALB)', 'FastAPI', 'Node.js', 'SQLModel / SQLAlchemy', 'Alembic', 'Firebase'].join(" • ")}
                         </Typography>
                     </Grid>
                     <Grid size={1}>
                         <Divider />
-                        <Typography color="text.primary">Soft Skills</Typography>
+                        <Typography color="text.primary">Frontend & Desktop</Typography>
                         <Typography color="text.secondary" sx={{ fontSize: '12px', my: 0 }}>
-                            {['Problem Solving', 'Team Collaboration', 'Accountability',
-                                'Time Management', 'Adaptability', 'Active Listening'].join(" • ")}
+                            {['React', 'Electron', 'Vite', 'Material UI (MUI)', 'Textual (TUI)', 'OpenSheetMusicDisplay'].join(" • ")}
+                        </Typography>
+                    </Grid>
+                    <Grid size={1}>
+                        <Divider />
+                        <Typography color="text.primary">Testing & DevOps</Typography>
+                        <Typography color="text.secondary" sx={{ fontSize: '12px', my: 0 }}>
+                            {['Pytest', 'GitLab CI/CD', 'Vitest', 'Playwright', 'Docker', 'Git', 'WebSockets'].join(" • ")}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -643,8 +644,7 @@ const Languages = () => {
 
     useEffect(() => {
         async function scrapeDuolingo() {
-            const duolingoUserId = import.meta.env.VITE_DUOLINGO_USER_ID as string;
-            const duolingoApiUrl = `https://www.duolingo.com/2017-06-30/users/${duolingoUserId}?fields=courses,name,username,picture,totalXp,streak`
+            const duolingoApiUrl = `https://www.duolingo.com/2017-06-30/users/764821183839217?fields=courses,name,username,picture,totalXp,streak`
             const proxyUrl = `https://api.allorigins.win/raw?url=${duolingoApiUrl}`;
             try {
                 const response = await fetch(proxyUrl);
