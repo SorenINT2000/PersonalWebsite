@@ -300,7 +300,7 @@ const Education = () => {
                 <Typography variant="h6">Education</Typography>
                 <Box sx={{ flexDirection: { xs: 'column', md: 'row' } }}>
                     <Box sx={{ flex: { md: '0 0 40%', lg: '0 0 35%' }, '@media print': { flex: '0 0 33%' } }}>
-                        <Typography color="text.primary">Case Western Reserve Uni.</Typography>
+                        <Typography color="text.primary">Case Western Reserve U.</Typography>
                         <Typography color="text.secondary" sx={{ fontSize: '12px', px: '16px' }}>
                             {"Sept 2020 - May 2025"}
                             <br />
@@ -516,9 +516,8 @@ const Projects = () => {
                 <Divider variant="fullWidth" />
                 {
                     Project(
-                        "Oregon ACP Website",
-                        "A website for the Oregon American College of Physicians (ACP). " +
-                        "Intended to be an improved version of the current oregonacp.org website. " +
+                        "Mockup Nonprofit Website",
+                        "A website mockup for a physician nonprofit association. " +
                         "Complete with an auth-protected admin dashboard where committee chairs can make announcements " +
                         "and executive members can manage permissions. Uses server-side pagination to load announcements " +
                         "and Firebase Functions to securely manage user claims.",
