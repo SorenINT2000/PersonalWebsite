@@ -10,7 +10,7 @@ PROFESSIONAL SUMMARY
 Full-stack software engineer with experience architecting and deploying scalable, end-to-end solutions. Proven ability to own a company's entire tech stack, from a Python/FastAPI backend on AWS to multi-threaded data pipelines, internal Electron tools, and public-facing React applications.
 
 EDUCATION
-Case Western Reserve Uni.
+Case Western Reserve U.
 Computer Science B.S. '24, M.S. '25
 Minors in Music & Mathematics
 GPA: 3.8/4.0
@@ -79,9 +79,9 @@ WebRTC Videochat
 TypeScript, React, Firebase Realtime DB, WebRTC, Metered TURN Server, Chakra UI
 A WebRTC videochat web-app that uses Firebase Realtime Database as a signaling server and the WebRTC protocol to stream video and audio data between clients. Uses Metered TURN server to relay traffic between clients and Firebase Security Rules to secure the database.
 
-Oregon ACP Website
+Mockup Nonprofit Website
 TypeScript, React, Firebase Auth, Firestore DB, Storage & Functions, Mantine UI
-A website for the Oregon American College of Physicians (ACP). Intended to be an improved version of the current oregonacp.org website. Complete with an auth-protected admin dashboard where committee chairs can make announcements and executive members can manage permissions. Uses server-side pagination to load announcements and Firebase Functions to securely manage user claims.
+A website mockup for a physician nonprofit association. Complete with an auth-protected admin dashboard where committee chairs can make announcements and executive members can manage permissions. Uses server-side pagination to load announcements and Firebase Functions to securely manage user claims.
 
 Variational Quantum Circuit for K-arm Bandit Solution Opt
 Python, Numpy, Matplotlib, Qiskit
