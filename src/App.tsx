@@ -21,21 +21,21 @@ function App() {
                     ref={asciiContainerRef}
                     sx={{
                         position: 'fixed',
-                        top: 10,
-                        right: { xs: -100, sm: -200 },
-                        width: { xs: '50vh', sm: '90vw' },
-                        height: { xs: '50vh', sm: '90vh' },
+                        top: { xs: 0, sm: 0, md: '-150px' },
+                        right: { xs: 0, sm: 0, md: '-150px' },
+                        width: { xs: '400px', sm: '500px', md: '900px' },
+                        height: { xs: '400px', sm: '500px', md: '900px' },
                         zIndex: 0,
-                        opacity: 0.4,
+                        opacity: 0.3,
                         pointerEvents: 'none',
                         overflow: 'visible',
                         '@media print': { display: 'none' },
                         fontWeight: 'bold',
                     }}
                 >
-                    <AsciiAnimation containerRef={asciiContainerRef} resolution={isMobile ? 0.3 : 0.2} />
+                    <AsciiAnimation containerRef={asciiContainerRef} resolution={isMobile ? 0.4 : 0.3} />
                 </Box>
-                <BrowserRouter sx={{ zIndex: 1 }}>
+                <BrowserRouter>
 
                     <Navbar />
                     <Routes>
