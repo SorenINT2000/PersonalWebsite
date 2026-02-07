@@ -22,6 +22,7 @@ function TorusKnotScene() {
             <meshLambertMaterial
                 color={0xffffff}
             // flatShading
+            // flatShading
             />
         </mesh>
     );
@@ -120,7 +121,13 @@ export default function AsciiAnimation({
                 background: 'transparent',
             }}
             gl={{ antialias: true, alpha: true }}
+            gl={{ antialias: true, alpha: true }}
         >
+            {/* Near-zero ambient — lets shadow faces be truly dark (space/dot) */}
+            <ambientLight intensity={0.02} />
+            {/* Key light at moderate intensity — prevents bright faces from all
+                clamping to 1.0, so the upper characters get differentiated too */}
+            <directionalLight position={[400, 400, 400]} intensity={0.9} />
             {/* Near-zero ambient — lets shadow faces be truly dark (space/dot) */}
             <ambientLight intensity={0.02} />
             {/* Key light at moderate intensity — prevents bright faces from all
