@@ -18,12 +18,10 @@ function TorusKnotScene() {
 
     return (
         <mesh ref={meshRef}>
-            <torusKnotGeometry args={[140, 45, 48, 6]} />
-            <meshPhongMaterial
+            <torusKnotGeometry args={[140, 20, 100, 20, 3, 5]} />
+            <meshLambertMaterial
                 color={0xffffff}
-                specular={0x666666}
-                shininess={60}
-                flatShading
+            // flatShading
             />
         </mesh>
     );
@@ -47,9 +45,12 @@ function AsciiRenderer({ containerRef, fgColor, bgColor, resolution }: AsciiRend
     useEffect(() => {
         gl.domElement.style.display = 'none';
 
-        const effect = new AsciiEffect(gl, ' .:-=+*#%@', {
-            resolution,
-        });
+        const effect = new AsciiEffect(gl, '.:-*+=%@# ',
+            {
+                invert: true,
+                resolution: resolution,
+                strResolution: 'high',
+            });
 
         effect.setSize(size.width, size.height);
         effect.domElement.style.color = fgColor;
@@ -119,14 +120,13 @@ export default function AsciiAnimation({
                 left: 0,
                 background: 'transparent',
             }}
-            gl={{ antialias: false, alpha: true }}
+            gl={{ antialias: true, alpha: true }}
         >
-            {/* Low ambient so shadow sides aren't pure black */}
-            <ambientLight intensity={0.15} />
-            {/* Key light — drives the main luminance gradient across faces */}
-            <directionalLight position={[300, 400, 500]} intensity={1.2} />
-            {/* Subtle fill from the opposite side */}
-            {/* <directionalLight position={[-200, -100, 300]} intensity={0.3} /> */}
+            {/* Near-zero ambient — lets shadow faces be truly dark (space/dot) */}
+            <ambientLight intensity={0.02} />
+            {/* Key light at moderate intensity — prevents bright faces from all
+                clamping to 1.0, so the upper characters get differentiated too */}
+            <directionalLight position={[400, 400, 400]} intensity={0.9} />
 
             <TorusKnotScene />
             <AsciiRenderer
