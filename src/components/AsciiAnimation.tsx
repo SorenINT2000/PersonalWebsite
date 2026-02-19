@@ -63,7 +63,7 @@ function TorusKnotScene() {
 
     return (
         <mesh ref={meshRef}>
-            <torusKnotGeometry args={[140, 20, 100, 20, 3, 5]} />
+            <torusKnotGeometry args={[140, 20, 200, 20, 3, 5]} />
             <meshLambertMaterial
                 color={0xffffff}
             // flatShading
@@ -153,7 +153,7 @@ export default function AsciiAnimation({
     return (
         <Canvas
             key={`${resolution}`}
-            camera={{ position: [0, 0, 600], fov: 50 }}
+            camera={{ position: [0, 0, 350], fov: 90 }}
             style={{
                 position: 'absolute',
                 top: 0,
