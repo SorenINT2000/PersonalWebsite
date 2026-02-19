@@ -4,7 +4,7 @@
     <!-- <link rel="preload" fetchpriority="high" as="image" href="/images/profile_lowres.webp" /> -->
     <link rel="preload" fetchpriority="high" as="image" href="/images/profile.jpg" />
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon-frames/frame_000.svg" id="favicon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Soren Schultz</title>
     <meta name="description" content="Soren Schultz's personal website">
@@ -23,5 +23,32 @@
       </div>
     </noscript>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      (function () {
+        var TOTAL = 18;
+        var INTERVAL = 80;
+        var icon = document.getElementById("favicon");
+        var dataUris = new Array(TOTAL);
+        var loaded = 0;
+        var idx = 0;
+
+        for (var i = 0; i < TOTAL; i++) {
+          (function (index) {
+            fetch("/favicon-frames/frame_" + String(index).padStart(3, "0") + ".svg")
+              .then(function (r) { return r.text(); })
+              .then(function (svg) {
+                dataUris[index] = "data:image/svg+xml," + encodeURIComponent(svg);
+                loaded++;
+                if (loaded === TOTAL) {
+                  setInterval(function () {
+                    idx = (idx + 1) % TOTAL;
+                    icon.href = dataUris[idx];
+                  }, INTERVAL);
+                }
+              });
+          })(i);
+        }
+      })();
+    </script>
   </body>
 </html>
