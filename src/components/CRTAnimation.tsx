@@ -1,8 +1,10 @@
 import { useRef, useEffect } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
+import { EffectComposer, Pixelation, Scanline, Bloom, ChromaticAberration, Vignette, ShockWave } from '@react-three/postprocessing';
+import { BlendFunction } from 'postprocessing';
 import { useTheme } from '@mui/material/styles';
+
 // ─── Mouse-tracking light ──────────────────────────────────────────────────────
 
 /**
@@ -31,7 +33,7 @@ function MouseLight({ intensity = 0.9 }: { intensity?: number }) {
         if (!lightRef.current) return;
 
         // Smooth lerp toward target so the light doesn't jitter
-        const lerpFactor = 0.08;
+        const lerpFactor = 0.05;
         smoothRef.current.x += (mouseRef.current.x - smoothRef.current.x) * lerpFactor;
         smoothRef.current.y += (mouseRef.current.y - smoothRef.current.y) * lerpFactor;
 
@@ -62,115 +64,47 @@ function TorusKnotScene() {
 
     return (
         <mesh ref={meshRef}>
-            <torusKnotGeometry args={[140, 20, 200, 20, 3, 5]} />
+            <torusKnotGeometry args={[140, 20, 200, 20, 3, 5]}/>
             <meshLambertMaterial
                 color={0xffffff}
-            // flatShading
+                // flatShading
             />
         </mesh>
     );
 }
 
-// ─── ASCII Renderer ────────────────────────────────────────────────────────────
-
-interface AsciiRendererProps {
-    containerRef: React.RefObject<HTMLDivElement | null>;
-    fgColor: string;
-    bgColor: string;
-    resolution: number;
-}
-
-function AsciiRenderer({ containerRef, fgColor, bgColor, resolution }: AsciiRendererProps) {
-    const { gl, scene, camera, size } = useThree();
-    const effectRef = useRef<InstanceType<typeof AsciiEffect> | null>(null);
-
-    useEffect(() => {
-        gl.domElement.style.display = 'none';
-
-        const effect = new AsciiEffect(gl, '.:-*+=%@# ',
-            {
-                invert: true,
-                resolution: resolution,
-            });
-
-        effect.setSize(size.width, size.height);
-        effect.domElement.style.color = fgColor;
-        effect.domElement.style.backgroundColor = bgColor;
-        effect.domElement.style.position = 'absolute';
-        effect.domElement.style.top = '0';
-        effect.domElement.style.left = '0';
-        effect.domElement.style.width = '100%';
-        effect.domElement.style.height = '100%';
-        effect.domElement.style.pointerEvents = 'none';
-
-        effectRef.current = effect;
-
-        if (containerRef.current) {
-            containerRef.current.appendChild(effect.domElement);
-        }
-
-        return () => {
-            if (effect.domElement.parentNode) {
-                effect.domElement.parentNode.removeChild(effect.domElement);
-            }
-        };
-    }, [gl, size, containerRef, fgColor, bgColor, resolution]);
-
-    useEffect(() => {
-        if (effectRef.current) {
-            effectRef.current.domElement.style.color = fgColor;
-            effectRef.current.domElement.style.backgroundColor = bgColor;
-        }
-    }, [fgColor, bgColor]);
-
-    useFrame(() => {
-        if (effectRef.current) {
-            effectRef.current.render(scene, camera);
-        }
-    }, 1);
-
-    return null;
-}
-
 // ─── Main Exported Component ───────────────────────────────────────────────────
 
-interface AsciiAnimationProps {
-    containerRef: React.RefObject<HTMLDivElement | null>;
-    resolution?: number;
-}
 
-export default function AsciiAnimation({
-    containerRef,
-    resolution = 0.15,
-}: AsciiAnimationProps) {
+export default function CRTAnimation() {
     const theme = useTheme();
-
-    const isDark = theme.palette.mode === 'dark';
-    const fgColor = isDark ? 'rgba(144, 202, 249, 1)' : 'rgba(25, 118, 210, 1)';
-    const bgColor = isDark ? '#121212' : '#f5f5f5';
-
     return (
         <Canvas
-            key={`${resolution}`}
             camera={{ position: [0, 0, 350], fov: 90 }}
             style={{
                 position: 'absolute',
                 top: 0,
                 left: 0,
                 background: 'transparent',
+                
+                opacity: theme.palette.mode === 'dark' ? 0.6 : 0.3,
             }}
             gl={{ antialias: true, alpha: true }}
         >
-            <ambientLight intensity={0.02} />
-            <MouseLight intensity={0.9} />
+            <ambientLight intensity={0.1} />
+            <MouseLight intensity={0.4} />
 
             <TorusKnotScene />
-            <AsciiRenderer
-                containerRef={containerRef}
-                fgColor={fgColor}
-                bgColor={bgColor}
-                resolution={resolution}
-            />
+            <EffectComposer>
+                <ChromaticAberration blendFunction={BlendFunction.NORMAL} offset={[0.001, 0.01, 0.002]} />
+                {/* <Noise blendFunction={BlendFunction.MULTIPLY} opacity={2} /> */}
+                <Bloom luminanceThreshold={0.01} blendFunction={BlendFunction.LIGHTEN} radius={0.5} intensity={0.8} />
+                <Vignette offset={0.1} darkness={1.1} />
+                <Pixelation granularity={1} />
+                <Scanline density={1} blendFunction={BlendFunction.MULTIPLY} opacity={0.5} scrollSpeed={0.005} />
+                <ShockWave />
+
+            </EffectComposer>
         </Canvas>
     );
 }

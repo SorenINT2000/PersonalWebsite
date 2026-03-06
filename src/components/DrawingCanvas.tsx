@@ -186,7 +186,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ onDraw
                     pointerEvents: 'none',
                     fontSize: '16px',
                     transition: 'transform 800ms ease-out',
-                    zIndex: 2,
+                    zIndex: 1,
                 }}
             >
                 draw a digit here

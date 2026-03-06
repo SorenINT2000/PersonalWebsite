@@ -7,14 +7,15 @@ import Artwork from './pages/Artwork'
 import Contact from './pages/Contact'
 import MNIST from './pages/MNIST'
 
-import AsciiAnimation from './components/AsciiAnimation'
+// import AsciiAnimation from './components/AsciiAnimation'
+import CRTAnimation from './components/CRTAnimation'
 import { useRef } from 'react'
 import { Box } from '@mui/material'
-import { useMediaQuery } from '@mui/material'
+// import { useMediaQuery } from '@mui/material'
 
 function App() {
     const asciiContainerRef = useRef<HTMLDivElement>(null);
-    const isMobile = useMediaQuery('(max-width: 600px)');
+    // const isMobile = useMediaQuery('(max-width: 600px)');
     return (
         <ThemeContextProvider>
             <Box
@@ -26,14 +27,14 @@ function App() {
                     width: { xs: '400px', sm: '500px', md: '900px' },
                     height: { xs: '400px', sm: '500px', md: '900px' },
                     zIndex: 0,
-                    opacity: 0.3,
                     pointerEvents: 'none',
                     overflow: 'visible',
                     '@media print': { display: 'none' },
                     fontWeight: 'bold',
                 }}
             >
-                <AsciiAnimation containerRef={asciiContainerRef} resolution={isMobile ? 0.4 : 0.3} />
+                {/* <AsciiAnimation containerRef={asciiContainerRef} resolution={isMobile ? 0.4 : 0.3} /> */}
+                <CRTAnimation />
             </Box>
             <BrowserRouter>
 
