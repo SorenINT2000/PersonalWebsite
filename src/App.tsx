@@ -27,17 +27,16 @@ function App() {
                     width: { xs: '400px', sm: '500px', md: '900px' },
                     height: { xs: '400px', sm: '500px', md: '900px' },
                     zIndex: 0,
+                    // opacity: 0.3,
                     pointerEvents: 'none',
                     overflow: 'visible',
                     '@media print': { display: 'none' },
                     fontWeight: 'bold',
-                }}
-            >
+                }}>
                 {/* <AsciiAnimation containerRef={asciiContainerRef} resolution={isMobile ? 0.4 : 0.3} /> */}
                 <CRTAnimation />
             </Box>
             <BrowserRouter>
-
                 <Navbar />
                 <Routes>
                     <Route path="/resume" element={<Resume />} />

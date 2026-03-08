@@ -1,9 +1,10 @@
 import { useRef, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { EffectComposer, Pixelation, Scanline, Bloom, ChromaticAberration, Vignette, ShockWave } from '@react-three/postprocessing';
+import { EffectComposer, Pixelation, Scanline, Bloom, ChromaticAberration, Vignette } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import { useTheme } from '@mui/material/styles';
+import { FloatType } from 'three';
 
 // ─── Mouse-tracking light ──────────────────────────────────────────────────────
 
@@ -51,9 +52,7 @@ function MouseLight({ intensity = 0.9 }: { intensity?: number }) {
 
 // ─── Torus knot scene ──────────────────────────────────────────────────────────
 
-function TorusKnotScene() {
-    const meshRef = useRef<THREE.Mesh>(null);
-
+function TorusKnotScene({ meshRef }: { meshRef: React.RefObject<THREE.Mesh | null> }) {
     useFrame(({ clock }) => {
         if (!meshRef.current) return;
         const t = clock.getElapsedTime();
@@ -64,7 +63,7 @@ function TorusKnotScene() {
 
     return (
         <mesh ref={meshRef}>
-            <torusKnotGeometry args={[140, 20, 200, 20, 3, 5]}/>
+            <torusKnotGeometry args={[140, 20, 200, 20, 3, 5]} />
             <meshLambertMaterial
                 color={0xffffff}
                 // flatShading
@@ -78,6 +77,7 @@ function TorusKnotScene() {
 
 export default function CRTAnimation() {
     const theme = useTheme();
+    const meshRef = useRef<THREE.Mesh | null>(null);
     return (
         <Canvas
             camera={{ position: [0, 0, 350], fov: 90 }}
@@ -91,19 +91,17 @@ export default function CRTAnimation() {
             }}
             gl={{ antialias: true, alpha: true }}
         >
-            <ambientLight intensity={0.1} />
-            <MouseLight intensity={0.4} />
+            <ambientLight intensity={0} />
+            <MouseLight intensity={0.7} />
 
-            <TorusKnotScene />
-            <EffectComposer>
-                <ChromaticAberration blendFunction={BlendFunction.NORMAL} offset={[0.001, 0.01, 0.002]} />
-                {/* <Noise blendFunction={BlendFunction.MULTIPLY} opacity={2} /> */}
-                <Bloom luminanceThreshold={0.01} blendFunction={BlendFunction.LIGHTEN} radius={0.5} intensity={0.8} />
-                <Vignette offset={0.1} darkness={1.1} />
+            <TorusKnotScene meshRef={meshRef} />
+            <EffectComposer depthBuffer={true} frameBufferType={FloatType}>
+                <Bloom luminanceThreshold={0.03} blendFunction={BlendFunction.LIGHTEN} radius={0.5} intensity={1.6} opacity={0.5} />
+                <ChromaticAberration blendFunction={BlendFunction.NORMAL} offset={[0.007, 0]} />
+                
+                <Scanline density={1} blendFunction={BlendFunction.OVERLAY} opacity={0.5} scrollSpeed={0.002} />
                 <Pixelation granularity={1} />
-                <Scanline density={1} blendFunction={BlendFunction.MULTIPLY} opacity={0.5} scrollSpeed={0.005} />
-                <ShockWave />
-
+                <Vignette blendFunction={BlendFunction.DARKEN} eskil={true} offset={2} darkness={1}/>
             </EffectComposer>
         </Canvas>
     );
