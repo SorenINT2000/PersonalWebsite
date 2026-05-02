@@ -8,7 +8,9 @@ import Contact from './pages/Contact'
 import MNIST from './pages/MNIST'
 
 // import AsciiAnimation from './components/AsciiAnimation'
-import CRTAnimation from './components/CRTAnimation'
+// import CRTAnimation from './components/CRTAnimation'
+import OutlineAnimation from './components/InnerOutlineEffect'
+import TubeAnimation from './components/TubeAnimation'
 import { useRef } from 'react'
 import { Box } from '@mui/material'
 // import { useMediaQuery } from '@mui/material'
@@ -34,9 +36,11 @@ function App() {
                     fontWeight: 'bold',
                 }}>
                 {/* <AsciiAnimation containerRef={asciiContainerRef} resolution={isMobile ? 0.4 : 0.3} /> */}
-                <CRTAnimation />
+                {/* <CRTAnimation /> */}
+                {/* <OutlineAnimation /> */}
+                <TubeAnimation />
             </Box>
-            <BrowserRouter>
+            {/* <BrowserRouter>
                 <Navbar />
                 <Routes>
                     <Route path="/resume" element={<Resume />} />
@@ -46,7 +50,7 @@ function App() {
                     <Route path="/mnist" element={<MNIST />} />
                     <Route path="/" element={<Navigate to="/resume" />} />
                 </Routes>
-            </BrowserRouter>
+            </BrowserRouter> */}
         </ThemeContextProvider>
     )
 }
